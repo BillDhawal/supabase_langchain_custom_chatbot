@@ -25,7 +25,7 @@ export default function ChatbotPage() {
           </li>
         </ul>
       </nav>
-      <h1 className="text-2xl font-bold mb-4">Chatbot Page</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Chatbot</h1>
       <div className="mb-4">
         <label
           htmlFor="apiKey"
@@ -37,7 +37,7 @@ export default function ChatbotPage() {
           type="password"
           id="apiKey"
           name="apiKey"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           value={apiKey}
           onChange={handleApiKeyChange}
           required

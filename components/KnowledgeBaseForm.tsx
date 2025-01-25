@@ -76,7 +76,7 @@ export default function KnowledgeBaseForm() {
             id="knowledgeBase"
             name="knowledgeBase"
             rows={5}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             value={formData.knowledgeBase}
             onChange={handleChange}
             required
@@ -93,7 +93,7 @@ export default function KnowledgeBaseForm() {
             type="password"
             id="openAiApiKey"
             name="openAiApiKey"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             value={formData.openAiApiKey}
             onChange={handleChange}
             required
