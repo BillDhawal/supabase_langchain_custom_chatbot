@@ -4,21 +4,9 @@ import Chatbot from "@/components/Chatbot";
 
 export default function ChatbotPage() {
   const [apiKey, setApiKey] = useState("");
-  const [supabaseUrl, setSupabaseUrl] = useState("");
-  const [supabaseApiKey, setSupabaseApiKey] = useState("");
 
   const handleApiKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setApiKey(e.target.value);
-  };
-
-  const handleSupabaseUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSupabaseUrl(e.target.value);
-  };
-
-  const handleSupabaseApiKeyChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setSupabaseApiKey(e.target.value);
   };
 
   return (
@@ -55,45 +43,7 @@ export default function ChatbotPage() {
           required
         />
       </div>
-      <div className="mb-4">
-        <label
-          htmlFor="supabaseUrl"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Supabase URL
-        </label>
-        <input
-          type="text"
-          id="supabaseUrl"
-          name="supabaseUrl"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          value={supabaseUrl}
-          onChange={handleSupabaseUrlChange}
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="supabaseApiKey"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Supabase API Key
-        </label>
-        <input
-          type="password"
-          id="supabaseApiKey"
-          name="supabaseApiKey"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-          value={supabaseApiKey}
-          onChange={handleSupabaseApiKeyChange}
-          required
-        />
-      </div>
-      <Chatbot
-        apiKey={apiKey}
-        supabaseUrl={supabaseUrl}
-        supabaseApiKey={supabaseApiKey}
-      />
+      <Chatbot apiKey={apiKey} />
     </main>
   );
 }

@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { submitKnowledgeBase } from "@/utils/submitKnowledgeBase";
+import { createClient } from "@supabase/supabase-js";
+import "dotenv/config";
 
 export default function KnowledgeBaseForm() {
   const [formData, setFormData] = useState({
     knowledgeBase: "",
-    supabaseUrl: "",
-    supabaseApiKey: "",
     openAiApiKey: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -23,8 +23,27 @@ export default function KnowledgeBaseForm() {
     e.preventDefault();
     console.log("Form Data:", formData);
     localStorage.setItem("openAiApiKey", formData.openAiApiKey); // Save API key to localStorage
-    await submitKnowledgeBase(formData);
+    await submitKnowledgeBase({
+      ...formData,
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      supabaseApiKey: process.env.NEXT_PUBLIC_SUPABASE_API_KEY!,
+    });
     setIsSubmitted(true);
+  };
+
+  const handleDelete = async () => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseApiKey = process.env.NEXT_PUBLIC_SUPABASE_API_KEY!;
+    const client = createClient(supabaseUrl, supabaseApiKey);
+
+    const { error } = await client.from("documents").delete().neq("id", 0); // Ensure all rows are deleted
+
+    if (error) {
+      console.error("Error deleting knowledge base:", error);
+    } else {
+      console.log("Knowledge base deleted successfully.");
+      setIsSubmitted(false);
+    }
   };
 
   return (
@@ -48,40 +67,6 @@ export default function KnowledgeBaseForm() {
             rows={5}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             value={formData.knowledgeBase}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="supabaseUrl"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Supabase URL
-          </label>
-          <input
-            type="password"
-            id="supabaseUrl"
-            name="supabaseUrl"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={formData.supabaseUrl}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="supabaseApiKey"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Supabase API Key
-          </label>
-          <input
-            type="password"
-            id="supabaseApiKey"
-            name="supabaseApiKey"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={formData.supabaseApiKey}
             onChange={handleChange}
             required
           />
@@ -112,6 +97,12 @@ export default function KnowledgeBaseForm() {
           </button>
         </div>
       </form>
+      <button
+        onClick={handleDelete}
+        className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 mt-4"
+      >
+        Delete Knowledge Base
+      </button>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   RunnablePassthrough,
   RunnableSequence,
 } from "@langchain/core/runnables";
+import "dotenv/config";
 
 import { formatConvHistory } from "../utils/formatConvHistory";
 
@@ -28,15 +29,7 @@ question: {question}
 answer (in detail): `;
 const answerPrompt = PromptTemplate.fromTemplate(answerTemplate);
 
-export default function Chatbot({
-  apiKey,
-  supabaseUrl,
-  supabaseApiKey,
-}: {
-  apiKey: string;
-  supabaseUrl: string;
-  supabaseApiKey: string;
-}) {
+export default function Chatbot({ apiKey }: { apiKey: string }) {
   const [convHistory, setConvHistory] = useState<string[]>([]);
   const [userInput, setUserInput] = useState("");
 
@@ -50,7 +43,7 @@ export default function Chatbot({
       maxTokens: 1500,
       temperature: 0.5,
     });
-    const retriever = createRetriever(apiKey, supabaseUrl, supabaseApiKey);
+    const retriever = createRetriever(apiKey);
 
     const standaloneQuestionChain = standaloneQuestionPrompt
       .pipe(llm)
@@ -112,7 +105,11 @@ export default function Chatbot({
             className="w-full p-4 text-lg border rounded-md mb-4"
             required
           />
-          <button id="submit-btn" className="submit-btn">
+          <button
+            id="submit-btn"
+            type="submit"
+            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
             Send
           </button>
         </form>
