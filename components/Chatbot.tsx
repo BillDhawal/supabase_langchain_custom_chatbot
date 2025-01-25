@@ -21,7 +21,7 @@ const standaloneQuestionPrompt = PromptTemplate.fromTemplate(
   standaloneQuestionTemplate
 );
 
-const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question about Scrimba based on the context provided and the conversation history. Try to find the answer in the context. If the answer is not given in the context, find the answer in the conversation history if possible. If you really don't know the answer, say "I'm sorry, I don't know the answer to that." And direct the questioner to email help@kapaAI.com. Don't try to make up an answer. Always speak as if you were chatting to a friend.
+const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question about Scrimba based on the context provided and the conversation history. Try to find the answer in the context. If the answer is not given in the context, find the answer in the conversation history if possible. If you really don't know the answer, say "I'm sorry, I don't know the answer to that." . Don't try to make up an answer. Always speak as if you were chatting to a friend.
 context: {context}
 conversation history: {conv_history}
 question: {question}
@@ -42,18 +42,8 @@ export default function Chatbot({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const chatbotConversation = document.getElementById(
-      "chatbot-conversation-container"
-    );
     const question = userInput;
     setUserInput("");
-
-    // add human message
-    const newHumanSpeechBubble = document.createElement("div");
-    newHumanSpeechBubble.classList.add("speech", "speech-human");
-    chatbotConversation.appendChild(newHumanSpeechBubble);
-    newHumanSpeechBubble.textContent = question;
-    chatbotConversation.scrollTop = chatbotConversation.scrollHeight;
 
     const llm = new ChatOpenAI({
       openAIApiKey: apiKey,
@@ -92,41 +82,41 @@ export default function Chatbot({
       conv_history: formatConvHistory(convHistory),
     });
 
-    setConvHistory([...convHistory, question, response]);
+    setConvHistory([...convHistory, `User: ${question}`, `AI: ${response}`]);
 
-    // add AI message
-    const newAiSpeechBubble = document.createElement("div");
-    newAiSpeechBubble.classList.add("speech", "speech-ai");
-    chatbotConversation.appendChild(newAiSpeechBubble);
-    newAiSpeechBubble.textContent = response;
-    chatbotConversation.scrollTop = chatbotConversation.scrollHeight;
+    console.log("User:", question);
+    console.log("AI:", response);
   };
 
   return (
-    <section className="chatbot-container">
-      <div className="chatbot-header"></div>
-      <div
-        className="chatbot-conversation-container"
-        id="chatbot-conversation-container"
-      ></div>
-      <form
-        id="form"
-        className="chatbot-input-container"
-        onSubmit={handleSubmit}
-      >
-        <input
-          name="user-input"
-          type="text"
-          id="user-input"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          className="w-full p-4 text-lg border rounded-md"
-          required
-        />
-        <button id="submit-btn" className="submit-btn">
-          Send
-        </button>
-      </form>
+    <section className="chatbot-container flex">
+      <div className="chatbot-history w-1/4 p-4 border-r overflow-y-auto">
+        {convHistory.map((message, index) => (
+          <p key={index} className="chatbot-message mb-2">
+            {message}
+          </p>
+        ))}
+      </div>
+      <div className="chatbot-main w-3/4 p-4">
+        <form
+          id="form"
+          className="chatbot-input-container"
+          onSubmit={handleSubmit}
+        >
+          <input
+            name="user-input"
+            type="text"
+            id="user-input"
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            className="w-full p-4 text-lg border rounded-md mb-4"
+            required
+          />
+          <button id="submit-btn" className="submit-btn">
+            Send
+          </button>
+        </form>
+      </div>
     </section>
   );
 }
