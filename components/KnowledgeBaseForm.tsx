@@ -11,6 +11,7 @@ export default function KnowledgeBaseForm() {
     openAiApiKey: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -47,6 +48,7 @@ export default function KnowledgeBaseForm() {
     } else {
       console.log("Knowledge base deleted successfully.");
       setIsSubmitted(false);
+      setDeleteSuccess(true);
     }
   };
 
@@ -55,6 +57,11 @@ export default function KnowledgeBaseForm() {
       {isSubmitted && (
         <div className="mb-4 p-4 text-green-700 bg-green-100 rounded">
           The knowledge base is submitted successfully.
+        </div>
+      )}
+      {deleteSuccess && (
+        <div className="mb-4 p-4 text-green-700 bg-green-100 rounded">
+          The knowledge base is deleted successfully.
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
