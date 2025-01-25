@@ -29,8 +29,10 @@ question: {question}
 answer (in detail): `;
 const answerPrompt = PromptTemplate.fromTemplate(answerTemplate);
 
-export default function Chatbot({ apiKey }: { apiKey: string }) {
-  const [convHistory, setConvHistory] = useState<string[]>([]);
+export default function Chatbot() {
+  const [convHistory, setConvHistory] = useState<
+    { type: string; message: string }[]
+  >([]);
   const [userInput, setUserInput] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,11 +41,14 @@ export default function Chatbot({ apiKey }: { apiKey: string }) {
     setUserInput("");
 
     const llm = new ChatOpenAI({
-      openAIApiKey: apiKey,
+      openAIApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
       maxTokens: 1500,
       temperature: 0.5,
     });
-    const retriever = createRetriever(apiKey);
+    if (!process.env.NEXT_PUBLIC_OPENAI_API_KEY) {
+      throw new Error("Missing OpenAI API key");
+    }
+    const retriever = createRetriever(process.env.NEXT_PUBLIC_OPENAI_API_KEY);
 
     const standaloneQuestionChain = standaloneQuestionPrompt
       .pipe(llm)
@@ -72,10 +77,14 @@ export default function Chatbot({ apiKey }: { apiKey: string }) {
 
     const response = await chain.invoke({
       question: question,
-      conv_history: formatConvHistory(convHistory),
+      conv_history: formatConvHistory(convHistory.map((item) => item.message)),
     });
 
-    setConvHistory([...convHistory, `User: ${question}`, `AI: ${response}`]);
+    setConvHistory([
+      ...convHistory,
+      { type: "User", message: question },
+      { type: "AI", message: response },
+    ]);
 
     console.log("User:", question);
     console.log("AI:", response);
@@ -85,8 +94,13 @@ export default function Chatbot({ apiKey }: { apiKey: string }) {
     <section className="chatbot-container flex h-screen">
       <div className="chatbot-history w-1/2 p-4 border-r overflow-y-auto">
         {convHistory.map((message, index) => (
-          <p key={index} className="chatbot-message mb-2">
-            {message}
+          <p
+            key={index}
+            className={`chatbot-message mb-2 ${
+              message.type === "User" ? "text-blue-500" : "text-green-500"
+            }`}
+          >
+            {message.type}: {message.message}
           </p>
         ))}
       </div>

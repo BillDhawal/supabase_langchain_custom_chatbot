@@ -8,7 +8,6 @@ import "dotenv/config";
 export default function KnowledgeBaseForm() {
   const [formData, setFormData] = useState({
     knowledgeBase: "",
-    openAiApiKey: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [deleteSuccess, setDeleteSuccess] = useState(false);
@@ -23,12 +22,12 @@ export default function KnowledgeBaseForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form Data:", formData);
-    localStorage.setItem("openAiApiKey", formData.openAiApiKey); // Save API key to localStorage
     try {
       await submitKnowledgeBase({
         ...formData,
         supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
         supabaseApiKey: process.env.NEXT_PUBLIC_SUPABASE_API_KEY!,
+        openAiApiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY!,
       });
       setIsSubmitted(true);
     } catch (error) {
@@ -80,23 +79,6 @@ export default function KnowledgeBaseForm() {
             rows={5}
             className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             value={formData.knowledgeBase}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="openAiApiKey"
-            className="block text-sm font-medium text-gray-700"
-          >
-            OpenAI API Key
-          </label>
-          <input
-            type="password"
-            id="openAiApiKey"
-            name="openAiApiKey"
-            className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-            value={formData.openAiApiKey}
             onChange={handleChange}
             required
           />
