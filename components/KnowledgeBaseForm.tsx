@@ -62,8 +62,8 @@ export default function KnowledgeBaseForm() {
       )}
       {deleteSuccess && (
         <div className="mb-4 p-4 text-green-700 bg-green-100 rounded">
-          The knowledge base is deleted successfully. Please Enter your
-          Knowledge Base and click Submit Knowledge Base.
+          The knowledge base is deleted successfully. Please enter your
+          knowledge base and click Submit Knowledge Base.
         </div>
       )}
       <form onSubmit={handleSubmit} className="space-y-4">
