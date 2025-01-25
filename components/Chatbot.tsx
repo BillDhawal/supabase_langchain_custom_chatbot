@@ -82,27 +82,26 @@ export default function Chatbot({ apiKey }: { apiKey: string }) {
   };
 
   return (
-    <section className="chatbot-container flex">
-      <div className="chatbot-history w-1/4 p-4 border-r overflow-y-auto">
+    <section className="chatbot-container flex h-screen">
+      <div className="chatbot-history w-1/2 p-4 border-r overflow-y-auto">
         {convHistory.map((message, index) => (
           <p key={index} className="chatbot-message mb-2">
             {message}
           </p>
         ))}
       </div>
-      <div className="chatbot-main w-3/4 p-4">
+      <div className="chatbot-main w-1/2 p-4 flex flex-col">
         <form
           id="form"
-          className="chatbot-input-container"
+          className="chatbot-input-container flex-grow flex flex-col"
           onSubmit={handleSubmit}
         >
-          <input
+          <textarea
             name="user-input"
-            type="text"
             id="user-input"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            className="w-full p-4 text-lg border rounded-md mb-4"
+            className="w-full p-4 text-lg border rounded-md mb-4 h-32"
             required
           />
           <button
