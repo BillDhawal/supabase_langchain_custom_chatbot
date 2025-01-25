@@ -23,12 +23,16 @@ export default function KnowledgeBaseForm() {
     e.preventDefault();
     console.log("Form Data:", formData);
     localStorage.setItem("openAiApiKey", formData.openAiApiKey); // Save API key to localStorage
-    await submitKnowledgeBase({
-      ...formData,
-      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      supabaseApiKey: process.env.NEXT_PUBLIC_SUPABASE_API_KEY!,
-    });
-    setIsSubmitted(true);
+    try {
+      await submitKnowledgeBase({
+        ...formData,
+        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        supabaseApiKey: process.env.NEXT_PUBLIC_SUPABASE_API_KEY!,
+      });
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting knowledge base:", error);
+    }
   };
 
   const handleDelete = async () => {
